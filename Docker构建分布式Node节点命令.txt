@@ -1,0 +1,26 @@
+docker run --name jenkins -itd -p 8080:8080 -p 50000:50000 -v ~/jenkins:/var/jenkins_home jenkins/jenkins:lts
+
+https://updates.jenkins.io/update-center.json
+https://updates.jenkins-zh.cn/update-center.json
+https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/current/update-center.json
+
+docker pull jenkins/jnlp-slave:alpine
+
+docker run -itd jenkinsci/jnlp-slave -url http://192.168.2.100:8080 bb8488097d7c128ceaaf782779e2e76601082f7322bf3b402b3fd75c422cd11b build
+
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H fd:// --containerd=/run/containerd/containerd.sock
+
+curl -XGET http://127.0.0.1:2375/version
+
+dockerNode(dockerHost: 'tcp://192.168.2.100:2375', image: 'jenkinsci/jnlp-slave') {
+    // some block
+    echo "abc"
+    sh "sleep 10"
+}
+
+
+node('docker-agent') {
+    // some block
+    echo "123"
+    sh "sleep 10"
+}
